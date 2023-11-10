@@ -43,8 +43,8 @@ namespace Proyecto_Laboratotio_Back2.Controllers
             //Los claims son datos en clave->valor que nos permite guardar data del usuario.
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.Id.ToString())); //"sub" convencion para id de usuario 
-            claimsForToken.Add(new Claim("given_name", user.Name)); //convenciones para nombre y apellido
-            claimsForToken.Add(new Claim("family_name", user.Role.ToString()));
+            claimsForToken.Add(new Claim("name", user.Name)); //convenciones para nombre y apellido
+            claimsForToken.Add(new Claim("role", user.Role.ToString()));
 
             var jwtSecurityToken = new JwtSecurityToken( //agregar using System.IdentityModel.Tokens.Jwt; Acá es donde se crea el token con toda la data que le pasamos antes.
               _config["Authentication:Issuer"],
