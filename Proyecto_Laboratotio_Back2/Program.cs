@@ -82,10 +82,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 //Add Services ****************** para poder inyectar los repository
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());//****
-//builder.Services.AddScoped<IContactoRepository, ContactoRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IAgendaRepository, AgendaRepository>();
-//builder.Services.AddScoped<IAgendaUserRepository, AgendaUserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 
 
 var app = builder.Build();
