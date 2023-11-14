@@ -84,6 +84,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());//****
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped< IProductRepository, ProductRepository >();
+builder.Services.AddScoped<IProductSaleRepository, ProductSaleRepository>();
+builder.Services.AddScoped<ISaleRepository, SaleRepository>();
 
 
 

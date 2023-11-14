@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_Laboratotio_Back2.Entities;
 using Proyecto_Laboratotio_Back2.Models.DTO;
@@ -92,6 +93,7 @@ namespace Proyecto_Laboratotio_Back2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult PostProduct(ProductDTOCreation productDtoCreation)
         {
             try
