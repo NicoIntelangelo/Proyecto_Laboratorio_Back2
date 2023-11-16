@@ -68,6 +68,8 @@ namespace Proyecto_Laboratotio_Back2.Controllers
             {
                 var user = _mapper.Map<User>(userDtoCreation);
 
+                user.Role = UserRole.User; //al usar este endpoint solo podemos crear users
+
                 var usersActivos = _userRepository.GetListUser();
 
                 foreach (var userActivo in usersActivos)
@@ -90,34 +92,21 @@ namespace Proyecto_Laboratotio_Back2.Controllers
             }
         }
 
-        [HttpGet("role")]
-        public IActionResult GetUserRole(int id)
+        [HttpGet]
+        public IActionResult GetuUsers()
         {
             try
             {
-                var userItem = _userRepository.GetUser(id).Role;
-                
-                return Ok(userItem); ///*************
+                var listUser = _userRepository.GetListUser();
+
+                var listUserDto = _mapper.Map<IEnumerable<UserDTO>>(listUser);
+
+                return Ok(listUserDto);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
-        //[HttpGet("userId")]//Test
-        //public IActionResult GetUserId()
-        //{
-        //    try
-        //    {
-        //        int userSesionId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-        //        return Ok(userSesionId); ///*************
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
     }
 }

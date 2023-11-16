@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using com.sun.xml.@internal.bind.v2.model.core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_Laboratotio_Back2.Entities;
 using Proyecto_Laboratotio_Back2.Models.DTO;
 using Proyecto_Laboratotio_Back2.Repository.Implementations;
 using Proyecto_Laboratotio_Back2.Repository.Interfaces;
+using System.Security.Claims;
 
 namespace Proyecto_Laboratotio_Back2.Controllers
 {
@@ -14,12 +16,14 @@ namespace Proyecto_Laboratotio_Back2.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IProductRepository _productRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public ProductController(IConfiguration config, IProductRepository productRepository, IMapper mapper)
+        public ProductController(IConfiguration config, IProductRepository productRepository, IUserRepository userRepository, IMapper mapper)
         {
             _config = config;
             this._productRepository = productRepository;
+            this._userRepository = userRepository;
             _mapper = mapper;
 
         }
@@ -96,39 +100,95 @@ namespace Proyecto_Laboratotio_Back2.Controllers
         [Authorize]
         public IActionResult PostProduct(ProductDTOCreation productDtoCreation)
         {
-            try
+            int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            
+            var userRole = _userRepository.GetUser(userId).Role;
+
+            if (userRole == UserRole.Admin || userRole == UserRole.SuperAdmin)
             {
-                var product = _mapper.Map<Product>(productDtoCreation);
+                try
+                {
+                    var product = _mapper.Map<Product>(productDtoCreation);
 
-                var productItem = _productRepository.AddProduct(product);
+                    var productItem = _productRepository.AddProduct(product);
 
-                var productItemDto = _mapper.Map<ProductDTO>(productItem);
+                    var productItemDto = _mapper.Map<ProductDTO>(productItem);
 
-                return Created("Created", productItemDto); 
+                    return Created("Created", productItemDto);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Unauthorized("Permisos Insuficientes");
+           
         }
 
         [HttpPut]
+        [Authorize]
         public IActionResult PutProduct(ProductDTO productDto)
         {
-            try
+            
+            int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            var userRole = _userRepository.GetUser(userId).Role;
+
+            if (userRole == UserRole.Admin || userRole == UserRole.SuperAdmin)
             {
-                var product = _mapper.Map<Product>(productDto);
+                try
+                {
+                    var product = _mapper.Map<Product>(productDto);
 
-                var productItem = _productRepository.UpdateProductData(product);
+                    var productItem = _productRepository.UpdateProductData(product);
 
-                var productItemDto = _mapper.Map<ProductDTO>(productItem);
+                    var productItemDto = _mapper.Map<ProductDTO>(productItem);
 
-                return Ok(productItemDto);
+                    return Ok(productItemDto);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
+            return Unauthorized("Permisos Insuficientes");
+
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public IActionResult DeleteProduct(int id)
+        {
+
+            int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            var userRole = _userRepository.GetUser(userId).Role;
+
+            if (userRole == UserRole.Admin || userRole == UserRole.SuperAdmin)
             {
-                return BadRequest(ex.Message);
+                try
+                {
+
+                    var productForDelete = _productRepository.GetProduct(id);
+
+
+                    if (productForDelete == null)
+                    {
+                        return NotFound();
+                    }
+
+                    _productRepository.DeleteProduct(productForDelete);
+
+                    return Ok();
+
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
+            return Unauthorized("Permisos Insuficientes");
+
         }
     }
 }

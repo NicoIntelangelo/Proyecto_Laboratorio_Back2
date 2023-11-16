@@ -3,6 +3,6 @@
     public class SaleDTO
     {
         public List<int> ProdcutsIds { get; set; }
-        ///public int UserId { get; set; }
+        public float Price { get; set; }
     }
 }

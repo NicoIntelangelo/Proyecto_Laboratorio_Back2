@@ -2,11 +2,12 @@
 
 namespace Proyecto_Laboratotio_Back2.Models.DTO
 {
-    public class UserDTO
+    public class AdminDTOCreation
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
         public string Direction { get; set; }
+        public string Password { get; set; }
         public UserRole Role { get; set; }
     }
 }

@@ -14,8 +14,12 @@ namespace Proyecto_Laboratotio_Back2.Models.Profiles
             CreateMap<User, UserDTOCreation>();
             CreateMap<UserDTOCreation, User>();
 
-            //CreateMap<User, UserModificacionDataDTO>();
-            //CreateMap<UserModificacionDataDTO, User>();
+            CreateMap<User, AdminDTOCreation>();
+            CreateMap<AdminDTOCreation, User>();
+
+            CreateMap<User, UserDTOEdit>();
+            CreateMap<UserDTOEdit, User>();
+
         }
     }
 }

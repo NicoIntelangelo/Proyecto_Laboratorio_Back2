@@ -40,6 +40,7 @@ namespace Proyecto_Laboratotio_Back2.Controllers
                 {
                     SaleDate= DateTime.Now,
                     UserId = userId,
+                    Price = saleDTO.Price,
                 };
 
 
