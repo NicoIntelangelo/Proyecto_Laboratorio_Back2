@@ -35,7 +35,19 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
             _context.SaveChanges();
             return product;
         }
-        
+
+        public int GetTotalProductQuantity()
+        {
+            int totalProductQuantity = _context.Products.Count();
+            return totalProductQuantity;
+        }
+
+        public int GetProductQuantityByCategory(string category)
+        {
+            int productQuantityByCategory = _context.Products.Count(p => p.Category == category);
+            return productQuantityByCategory;
+        }
+
         public Product UpdateProductData(Product product)
         {
             var productItem = _context.Products.FirstOrDefault(p => p.Id == product.Id);
@@ -55,6 +67,7 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
                 _context.SaveChanges();
                 return product;
             }
+            
             return null;
         }
     }

@@ -12,8 +12,8 @@ using Proyecto_Laboratotio_Back2.Data;
 namespace Proyecto_Laboratotio_Back2.Migrations
 {
     [DbContext(typeof(AplicationDbContext))]
-    [Migration("20231110020407_first1")]
-    partial class first1
+    [Migration("20231118155029_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,6 +89,9 @@ namespace Proyecto_Laboratotio_Back2.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("SaleDate")
                         .HasColumnType("datetime2");

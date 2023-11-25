@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using com.sun.xml.@internal.bind.v2.model.core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_Laboratotio_Back2.Entities;
 using Proyecto_Laboratotio_Back2.Models.DTO;
-using Proyecto_Laboratotio_Back2.Repository.Implementations;
 using Proyecto_Laboratotio_Back2.Repository.Interfaces;
 using System.Security.Claims;
 
@@ -89,6 +87,41 @@ namespace Proyecto_Laboratotio_Back2.Controllers
                 var ProductDTO = _mapper.Map<ProductDTO>(Product);
 
                 return Ok(ProductDTO);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("total-quantity")]
+        public IActionResult GetTotalProductQuantity()
+        {
+            try
+            {
+                int totalProductQuantity = _productRepository.GetTotalProductQuantity();
+
+                return Ok(totalProductQuantity);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("quantity-by-category/{category}")]
+        public IActionResult GetProductQuantityByCategory(string category)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(category))
+                {
+                    return BadRequest("La categoría no puede estar vacía");
+                }
+
+                int productQuantityByCategory = _productRepository.GetProductQuantityByCategory(category);
+
+                return Ok(productQuantityByCategory);
             }
             catch (Exception ex)
             {

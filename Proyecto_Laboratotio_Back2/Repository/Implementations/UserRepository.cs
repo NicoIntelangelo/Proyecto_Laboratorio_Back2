@@ -32,11 +32,15 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
             return _context.Users.ToList();
         }
 
+        public List<User> GetListAdmins()
+        {
+            return _context.Users.Where(u => u.Role == UserRole.Admin).ToList();
+        }
+
         public User GetUser(int id)
         {
             return _context.Users.SingleOrDefault(u => u.Id == id);
         }
-       
 
         public void UpdateUserData(User user)
         {
@@ -55,6 +59,7 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
         {
             return _context.Users.FirstOrDefault(p => p.Email == authRequestBody.Email && p.Password == authRequestBody.Password);
         }
+
         public User? GetById(int userId)
         {
             return _context.Users.SingleOrDefault(u => u.Id == userId);

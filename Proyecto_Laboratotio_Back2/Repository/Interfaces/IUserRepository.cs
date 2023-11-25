@@ -6,6 +6,7 @@ namespace Proyecto_Laboratotio_Back2.Repository.Interfaces
     public interface IUserRepository
     {
         List<User> GetListUser();
+        List<User> GetListAdmins();
         User GetUser(int id);
         void DeleteUser(User user);
         User AddUser(User user);
