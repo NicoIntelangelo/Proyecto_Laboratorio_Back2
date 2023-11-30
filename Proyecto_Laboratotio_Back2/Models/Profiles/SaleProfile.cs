@@ -11,6 +11,9 @@ namespace Proyecto_Laboratotio_Back2.Models.Profiles
             CreateMap<ProductsSales, SaleDTO>();
             CreateMap<SaleDTO, ProductsSales>();
 
+            CreateMap<ProductsSales, SaleDTOProducts>();
+            CreateMap<SaleDTOProducts, ProductsSales>();
+
         }
     }
 }

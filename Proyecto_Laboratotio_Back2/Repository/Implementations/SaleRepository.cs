@@ -24,6 +24,11 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
         {
             return _context.Sales.SingleOrDefault(s => s.UserId == user_id);
         }
+
+        public List<Sale> GetSalesOfUser(int user_id)
+        {
+            return _context.Sales.Where(s => s.UserId == user_id).ToList();
+        }
         public void DeleteSale(Sale sale)
         {
             _context.Sales.Remove(sale);

@@ -94,40 +94,40 @@ namespace Proyecto_Laboratotio_Back2.Controllers
             }
         }
 
-        [HttpGet("total-quantity")]
-        public IActionResult GetTotalProductQuantity()
-        {
-            try
-            {
-                int totalProductQuantity = _productRepository.GetTotalProductQuantity();
+        //[HttpGet("total-quantity")]
+        //public IActionResult GetTotalProductQuantity()
+        //{
+        //    try
+        //    {
+        //        int totalProductQuantity = _productRepository.GetTotalProductQuantity();
 
-                return Ok(totalProductQuantity);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //        return Ok(totalProductQuantity);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
-        [HttpGet("quantity-by-category/{category}")]
-        public IActionResult GetProductQuantityByCategory(string category)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(category))
-                {
-                    return BadRequest("La categoría no puede estar vacía");
-                }
+        //[HttpGet("quantity-by-category/{category}")]
+        //public IActionResult GetProductQuantityByCategory(string category)
+        //{
+        //    try
+        //    {
+        //        if (string.IsNullOrWhiteSpace(category))
+        //        {
+        //            return BadRequest("La categoría no puede estar vacía");
+        //        }
 
-                int productQuantityByCategory = _productRepository.GetProductQuantityByCategory(category);
+        //        int productQuantityByCategory = _productRepository.GetProductQuantityByCategory(category);
 
-                return Ok(productQuantityByCategory);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+        //        return Ok(productQuantityByCategory);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //}
 
         [HttpPost]
         [Authorize]

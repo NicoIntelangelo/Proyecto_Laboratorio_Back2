@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using org.h2.value;
 using Proyecto_Laboratotio_Back2.Entities;
 using Proyecto_Laboratotio_Back2.Models.DTO;
 using Proyecto_Laboratotio_Back2.Repository.Implementations;
@@ -29,16 +31,25 @@ namespace Proyecto_Laboratotio_Back2.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult PostProduct(SaleDTO saleDTO)
         {
             try
             {
                 int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);//valor del id del user logueado
 
+                DateTime utcNow = DateTime.UtcNow;
+
+                // Specify the time zone for Argentina
+                TimeZoneInfo argentinaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+
+                // Convert UTC time to Argentina time
+                DateTime argentinaTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, argentinaTimeZone);
+
 
                 Sale sale = new Sale
                 {
-                    SaleDate= DateTime.Now,
+                    SaleDate= argentinaTime,
                     UserId = userId,
                     Price = saleDTO.Price,
                 };
@@ -71,6 +82,53 @@ namespace Proyecto_Laboratotio_Back2.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetSalesList()
+        {
+            int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+            List<SaleDTOProducts> allSales = new List<SaleDTOProducts>();
+
+            try
+            {
+                var userSales = _saleRepository.GetSalesOfUser(userId);
+
+                foreach(var sale in userSales)
+                {
+                    var productsSales = _productSaleRepository.GetProductsOfSales(sale.Id);
+
+                    List<ProductDTO> products = new List<ProductDTO>();
+
+                    foreach (var productSale  in productsSales)
+                    {
+                        var productId = productSale.ProductId;
+                        var product = _productRepository.GetProduct(productId);
+                        var productItemDto = _mapper.Map<ProductDTO>(product);
+                        products.Add(productItemDto);
+                    }
+
+                    SaleDTOProducts saleDTOProducts = new SaleDTOProducts
+                    {
+                        SaleId = sale.Id,
+                        Price = sale.Price,
+                        Products = products,
+                        SaleDate = sale.SaleDate
+                    };
+
+                    allSales.Add(saleDTOProducts);
+
+                }
+                return Ok(allSales);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
     }
 }

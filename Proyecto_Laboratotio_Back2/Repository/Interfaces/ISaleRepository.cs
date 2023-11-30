@@ -9,5 +9,6 @@ namespace Proyecto_Laboratotio_Back2.Repository.Interfaces
         Sale GetSaleOfUser(int user_id);
         void DeleteSale(Sale sale);
         Sale AddSale(Sale sale);
+        List<Sale> GetSalesOfUser(int user_id);
     }
 }

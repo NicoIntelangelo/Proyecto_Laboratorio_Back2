@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using com.sun.xml.@internal.bind.v2.model.core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Proyecto_Laboratotio_Back2.Entities;
@@ -56,10 +57,12 @@ namespace Proyecto_Laboratotio_Back2.Controllers
                     return NotFound();
                 }
                 
-                if (id != userSesionId && userSesionRole == UserRole.User) //cheque que el usuario se elimine a el mismo o que un admin o superadmin lo haga
+                if (id != userSesionId && userSesionRole != UserRole.SuperAdmin) //cheque que el usuario se elimine a el mismo o que un superadmin lo haga
                 {
                     return Unauthorized();
                 }
+
+               
 
                 _userRepository.DeleteUser(userForDelete);
 
@@ -117,6 +120,46 @@ namespace Proyecto_Laboratotio_Back2.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpPost("newadmin")]
+        public IActionResult PostUser(UserDTOCreation userDtoCreation)
+        {
+            try
+            {
+                int userSesionId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
+
+                var userSesionRole = _userRepository.GetUser(userSesionId).Role;
+
+                if (userSesionRole != UserRole.SuperAdmin) 
+                {
+                    return Unauthorized();
+                }
+
+                var user = _mapper.Map<User>(userDtoCreation);
+
+                user.Role = UserRole.Admin; //crea el user como admin
+
+                var usersActivos = _userRepository.GetListUser();
+
+                foreach (var userActivo in usersActivos)
+                {
+                    if (user.Email == userActivo.Email)
+                    {
+                        return BadRequest("El email ingresado ya es utilizado en una cuenta activa");
+                    }
+                }
+
+                var userItem = _userRepository.AddUser(user);
+
+                var userItemDto = _mapper.Map<UserDTO>(userItem);
+
+                return Created("Created", userItemDto); ///*************
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
     }

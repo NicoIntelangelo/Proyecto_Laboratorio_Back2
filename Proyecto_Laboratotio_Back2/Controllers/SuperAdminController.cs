@@ -119,28 +119,5 @@ namespace Proyecto_Laboratotio_Back2.Controllers
         }
 
 
-        [HttpGet("admins-quantity")]
-        public IActionResult GetAdminsQuantity()
-        {
-            int userId = Int32.Parse(HttpContext.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value);
-
-            var userRole = _userRepository.GetUser(userId).Role;
-
-            if (userRole == UserRole.SuperAdmin)
-            {
-                try
-                {
-                    var adminsCount = _userRepository.GetListUser().Count(u => u.Role == UserRole.Admin);
-
-                    return Ok(adminsCount);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-
-            return Unauthorized("Permisos Insuficientes");
-        }
     }
 }

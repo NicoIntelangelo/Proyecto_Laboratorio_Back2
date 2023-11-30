@@ -17,10 +17,10 @@ namespace Proyecto_Laboratotio_Back2.Repository.Implementations
         {
             return _context.ProductsSales.ToList();
         }
-        //public List<ProductsSales> GetProductsOfSalesOfUser(int user_id)
-        //{
-        //    return _context.ProductsSales.ToList().Where(ps => ps.);
-        //}
+        public List<ProductsSales> GetProductsOfSales(int sale_id)
+        {
+            return _context.ProductsSales.Where(ps => ps.SaleId == sale_id).ToList();
+        }
         public ProductsSales AddProductSale(ProductsSales productsSales)
         {
             _context.ProductsSales.Add(productsSales);
